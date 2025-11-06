@@ -77,6 +77,15 @@ class User
         return $this->type;
     }
 
+    public function isAdmin():bool{
+
+        if ($this->type===UserType::ADMIN){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function setType(UserType $type): User
     {
         $this->type = $type;

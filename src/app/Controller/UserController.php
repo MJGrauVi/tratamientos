@@ -13,6 +13,8 @@ class UserController implements ControllerInterface
 
     public function index(){
 
+
+
         //Pediriamos al modelo que nos buscara todos los usuarios
         $usuario1= new User('miguel','miguel@miguel.com','hola');
         $usuario2= new User('paula','paula@paula.com','holapaula');
@@ -101,12 +103,17 @@ class UserController implements ControllerInterface
     }
 
     public function verify(){
-        var_dump($_POST);
+        //var_dump($_POST);
 
         $usuario = UserModel::loadUserByEmail($_POST['email']);
 
         if (password_verify($_POST['password'],$usuario->getPassword())){
             $_SESSION['user']=$usuario;
+            if ($usuario->isAdmin()){
+                header('Location: /user');
+            }else{
+                header('Location: /');
+            }
         }else{
             return "No se ha podido realizar el login";
         }

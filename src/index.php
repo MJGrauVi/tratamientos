@@ -13,8 +13,34 @@ session_start();
 
 $router = new RouteCollector();
 
+
+$router->filter('auth',function(){
+
+    if(isset($_SESSION['user'])){
+        return true;
+    }else{
+        header('Location: /login');
+        return false;
+    }
+});
+
+$router->filter('admin',function(){
+    if(isset($_SESSION['user']) && $_SESSION['user']->isAdmin()){
+        return true;
+    }else{
+        header('Location: /error');
+        return false;
+    }
+
+});
+
 $router->get('/',function (){
     include_once DIRECTORIO_VISTAS_FRONTEND."index.php";
+});
+
+$router->get('/error',function (){
+    $errores = ["Ruta no encontrada"];
+    include_once DIRECTORIO_VISTAS."error.php";
 });
 
 
@@ -27,10 +53,11 @@ $router->get('/login',function (){
 //Vistas de la aplicacion
 $router->get('/user/create',[UserController::class,'create']);
 $router->post('/user/login',[UserController::class,'verify']);
-$router->get('/user/{id}/edit',[UserController::class,'edit']);
+$router->get('/user/logout',[UserController::class,'logout'],["before"=>'auth']);
+$router->get('/user/{id}/edit',[UserController::class,'edit'],["before"=>'auth']);
 
 
-$router->get('/user',[UserController::class,'index']);
+$router->get('/user',[UserController::class,'index'],["before"=>'admin']);
 $router->get('/user/{id}',[UserController::class,'show']);
 $router->post('/user',[UserController::class,'store']);
 $router->put('/user/{id}',[UserController::class,'update']);

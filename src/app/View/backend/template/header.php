@@ -188,7 +188,7 @@
     <a
         class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white"
         href="#"
-    >Company name</a
+    >Netflix</a
     >
     <ul class="navbar-nav flex-row d-md-none">
         <li class="nav-item text-nowrap">
@@ -230,6 +230,9 @@
             aria-label="Search"
         />
     </div>
+    <div class="col-4 d-flex justify-content-end align-items-center gap-1">
+        <a class="link-secondary" href="/user/<?=$_SESSION['user']->getUuid()?>" aria-label="Search"> Hola, <?=$_SESSION['user']->getUsername()?> </a>
+        <a class="btn btn-sm btn-outline-danger" href="/logout">Cerrar Sesión</a> </div>
 </header>
 <div class="container-fluid">
     <div class="row">
