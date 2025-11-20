@@ -1,6 +1,0 @@
-git clone
-cambias datos de usuario de DockerFile
-cambias fichero apache2.conf user y group
-Ejecutas docker-compose.yml
-entras en el contenedor de php en la terminal
-ejecutas composer update

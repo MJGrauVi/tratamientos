@@ -1,41 +1,16 @@
 <?php
 
 include_once "vendor/autoload.php";
-include_once "env.php";
-include_once "auxiliar/auxfunctions.php";
 
 use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Phroute\Phroute\RouteCollector;
-use App\Controller\UserController;
-use App\Controller\DirectorController;
 
-session_start();
 
 $router = new RouteCollector();
 
 
-$router->filter('auth',function(){
-
-    if(isset($_SESSION['user'])){
-        return true;
-    }else{
-        header('Location: /login');
-        return false;
-    }
-});
-
-$router->filter('admin',function(){
-    if(isset($_SESSION['user']) && $_SESSION['user']->isAdmin()){
-        return true;
-    }else{
-        header('Location: /error');
-        return false;
-    }
-
-});
-
 $router->get('/',function (){
-    include_once DIRECTORIO_VISTAS_FRONTEND."index.php";
+    include_once "app/View/principal.php";
 });
 
 $router->get('/error',function (){

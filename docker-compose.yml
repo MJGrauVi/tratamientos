@@ -7,25 +7,20 @@ services:
       dockerfile: Dockerfile
     container_name: php_apache
 
-    user: matomas:matomas
-
     volumes:
       - ./src:/var/www/html
       - .docker/apache/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
-      - .docker/apache/apache2.conf:/etc/apache2/apache2.conf
-      - .docker/apache/ports.conf:/etc/apache2/ports.conf
-      - .docker/php/php.ini:/usr/local/etc/php/php.ini-development
+      - .docker/php/php.ini:/usr/local/etc/php/php.ini
       - .docker/xdebug/debug.ini:/usr/local/etc/php/conf.d/debug.ini
 
     expose:
       - 80
     ports:
-      - 8080:80
+      - 8085:80
     networks:
-      - proyecto1
+      - examen
     links:
       - mariadb
-      - mongo
 
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -34,45 +29,22 @@ services:
     image: mariadb:latest
     restart: on-failure
 
-    volumes:
-      - .docker/mariadb:/var/lib/mysql:Z
-
     ports:
-      - 3307:3306
+      - 3310:3306
 
     networks:
-      - proyecto1
+      - examen
 
     environment:
       MARIADB_ROOT_PASSWORD: toor
-      MARIADB_DATABASE: proyecto
-      MARIADB_USER: miguel
-      MARIADB_PASSWORD: leugim
+      MARIADB_DATABASE: examen
+      MARIADB_USER: alumno
+      MARIADB_PASSWORD: alumno
 
     command:
       --default-authentication-plugin=mysql_native_password
 
-  mongo:
-    image: mongo:latest
-    restart: on-failure
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: toor
-    ports:
-      - 27018:27017
-    networks:
-      - proyecto1
-
-  redis:
-    image: redis:latest
-    restart: on-failure
-    ports:
-      - 6379:6379
-    networks:
-      - proyecto1
-
-
 networks:
-  proyecto1:
-    name: proyecto1
+  examen:
+    name: examen
     driver: bridge
