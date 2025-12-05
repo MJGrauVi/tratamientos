@@ -1,63 +1,61 @@
-drop table if exists equipos;
+drop table if exists medicamentos;
+drop table if exists pacientes;
+drop table if exists tratamientos;
+drop table if exists tratamiento_medicamentos;
 
--- Tabla para la clase Equipo
-CREATE TABLE equipos (
-                         id INT PRIMARY KEY,
-                         nombre VARCHAR(255) NOT NULL,
-                         region VARCHAR(100) NOT NULL,
-                         win_rate FLOAT DEFAULT 0
+-- Tabla para la clase Medicamento
+CREATE TABLE medicamentos (
+                              id INT PRIMARY KEY,
+                              nombre_comercial VARCHAR(255) NOT NULL,
+                              principio_activo VARCHAR(255) NOT NULL,
+                              precio FLOAT DEFAULT 0
 );
 
--- Tabla para la clase Jugador
-CREATE TABLE jugadores (
+-- Tabla para la clase Paciente
+CREATE TABLE pacientes (
                            id INT PRIMARY KEY,
                            nombre VARCHAR(255) NOT NULL,
-                           email VARCHAR(255) NOT NULL UNIQUE,
-                           nickname VARCHAR(100) NOT NULL,
-                           nivel INT DEFAULT 1
+                           numero_sip VARCHAR(50) NOT NULL UNIQUE,
+                           fecha_nacimiento DATE NOT NULL,
+                           alergias VARCHAR(255)
 );
 
--- Tabla para la clase Torneo
-CREATE TABLE torneos (
-                         id INT AUTO_INCREMENT PRIMARY KEY,
-                         nombre VARCHAR(255) NOT NULL,
-                         fecha DATE NOT NULL,
-                         premio_total FLOAT DEFAULT 0
+-- Tabla para la clase Tratamiento
+CREATE TABLE tratamientos (
+                              id INT PRIMARY KEY,
+                              codigo_tratamiento VARCHAR(50) NOT NULL UNIQUE,
+                              diagnostico VARCHAR(255) NOT NULL,
+                              duracion_dias INT NOT NULL,
+                              paciente_id INT NOT NULL,
+                              CONSTRAINT fk_paciente_tratamiento FOREIGN KEY (paciente_id) REFERENCES pacientes(id) ON DELETE CASCADE
 );
 
--- Tabla intermedia para la relación Jugador "tiene favoritos" Equipo (N:M)
-CREATE TABLE jugador_favoritos (
-                                   jugador_id INT NOT NULL,
-                                   equipo_id INT NOT NULL,
-                                   PRIMARY KEY (jugador_id, equipo_id),
-                                   CONSTRAINT fk_jugador_fav FOREIGN KEY (jugador_id) REFERENCES jugadores(id) ON DELETE CASCADE,
-                                   CONSTRAINT fk_equipo_fav FOREIGN KEY (equipo_id) REFERENCES equipos(id) ON DELETE CASCADE
-);
-
--- Tabla intermedia para la relación Torneo "compuesto por" Equipo (N:M)
-CREATE TABLE torneo_equipos (
-                                torneo_id INT NOT NULL,
-                                equipo_id INT NOT NULL,
-                                PRIMARY KEY (torneo_id, equipo_id),
-                                CONSTRAINT fk_torneo_part FOREIGN KEY (torneo_id) REFERENCES torneos(id) ON DELETE CASCADE,
-                                CONSTRAINT fk_equipo_part FOREIGN KEY (equipo_id) REFERENCES equipos(id) ON DELETE CASCADE
+-- Tabla intermedia para la relación Tratamiento "prescribe" Medicamento (N:M)
+CREATE TABLE tratamiento_medicamentos (
+                                          tratamiento_id INT NOT NULL,
+                                          medicamento_id INT NOT NULL,
+                                          PRIMARY KEY (tratamiento_id, medicamento_id),
+                                          CONSTRAINT fk_tratamiento_med FOREIGN KEY (tratamiento_id) REFERENCES tratamientos(id) ON DELETE CASCADE,
+                                          CONSTRAINT fk_medicamento_trat FOREIGN KEY (medicamento_id) REFERENCES medicamentos(id) ON DELETE CASCADE
 );
 
 -- Datos de ejemplo opcionales para pruebas
-INSERT INTO equipos (id,nombre, region, win_rate) VALUES
-                                                   (1,'T1', 'Korea', 75.5),
-                                                   (2,'G2 Esports', 'Europe', 68.2),
-                                                   (3,'Fnatic', 'Europe', 60.0),
-                                                   (4,'Cloud9', 'North America', 55.4);
+INSERT INTO medicamentos (id,nombre_comercial, principio_activo, precio) VALUES
+                                                                          (1,'Paracetamol Cinfa', 'Paracetamol', 2.50),
+                                                                          (2,'Ibuprofeno Kern Pharma', 'Ibuprofeno', 3.20),
+                                                                          (3,'Amoxicilina Normon', 'Amoxicilina', 7.80);
 
-INSERT INTO jugadores (id,nombre, email, nickname, nivel) VALUES
-                                                           (1,'Miguel Angel', 'miguel@example.com', 'MikePro', 10),
-                                                           (2,'Ana Garcia', 'ana@example.com', 'AnitaG', 25);
+INSERT INTO pacientes (id,nombre, numero_sip, fecha_nacimiento, alergias) VALUES
+                                                                           (1,'Juan Pérez', 'SIP12345678', '1980-05-15', 'Alergia a la penicilina y los acaros'),
+                                                                           (2,'María López', 'SIP87654321', '1992-11-20', 'Alergia al polen'),
+                                                                           (3,'Alberto Sánchez', 'SIP46581822', '1999-04-18', 'Sin alergias conocidas'),
+                                                                           (4,'Juana Carrillo', 'SIP65473899', '1975-08-01', 'Alergia a los frutos secos');
 
-INSERT INTO torneos (id, nombre, fecha, premio_total) VALUES
-                                                      (1,'Worlds 2025', '2025-11-01', 2000000.00),
-                                                      (2,'LEC Winter', '2025-01-20', 50000.00);
 
--- Asociaciones de ejemplo
-INSERT INTO jugador_favoritos (jugador_id, equipo_id) VALUES (1, 1), (1, 2), (2, 3);
-INSERT INTO torneo_equipos (torneo_id, equipo_id) VALUES (1, 1), (1, 2), (1, 3), (1, 4), (2, 2), (2, 3);
+INSERT INTO tratamientos (id, codigo_tratamiento, diagnostico, duracion_dias, paciente_id) VALUES
+                                                                                           (1,'TRT001', 'Fiebre y dolor de cabeza', 7, 1),
+                                                                                           (2,'TRT002', 'Infección bacteriana', 10, 2);
+
+INSERT INTO tratamiento_medicamentos (tratamiento_id, medicamento_id) VALUES
+                                                                          (1, 1), -- TRT001 - Paracetamol
+                                                                          (2, 3); -- TRT002 - Amoxicilina
