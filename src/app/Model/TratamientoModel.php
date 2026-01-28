@@ -15,6 +15,7 @@ public static function saveTratamiento(Tratamiento $tratamiento):?bool
         $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
+        return false;
     }
     $sql = "INSERT INTO tratamientos (codigo_tratamiento, diagnostico, duracion_dias)VALUES(:codigo_tratamiento, :diagnostico, :duracion_dias)";
     $stmt = $conexion->prepare($sql);

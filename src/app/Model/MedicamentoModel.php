@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Model;
+
 use App\Class\Medicamento;
 use PDO;
 class MedicamentoModel

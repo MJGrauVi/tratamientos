@@ -61,7 +61,6 @@ public function __construct(string $nombre_comercial, string $principio_activo, 
     }
 
 
-
     /**
      * @inheritDoc
      */

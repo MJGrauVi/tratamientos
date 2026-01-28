@@ -95,6 +95,8 @@ private array $medicamentos;
         );
          return $tratamiento;
     }
+    /*La clase Tratamiento tiene un método addMedicamento($medicamento) que permite añadir objetos de tipo
+    Medicamento al array de medicamentos del tratameinto.*/
    public function addMedicamento(Medicamento $medicamento): void{
         $this->medicamentos[]= $medicamento;
     }
