@@ -5,7 +5,7 @@ services:
     build:
       context: .docker
       dockerfile: Dockerfile
-    container_name: php_apache_examen
+    container_name: php_apache_paciente
 
     volumes:
       - ./src:/var/www/html
@@ -18,7 +18,7 @@ services:
     ports:
       - 8085:80
     networks:
-      - examen
+      - paciente
     links:
       - mariadb
 
@@ -33,11 +33,11 @@ services:
       - 3310:3306
 
     networks:
-      - examen
+      - paciente
 
     environment:
       MARIADB_ROOT_PASSWORD: toor
-      MARIADB_DATABASE: examen
+      MARIADB_DATABASE: paciente
       MARIADB_USER: alumno
       MARIADB_PASSWORD: alumno
 
@@ -45,6 +45,6 @@ services:
       --default-authentication-plugin=mysql_native_password
 
 networks:
-  examen:
-    name: examen
+  paciente:
+    name: paciente
     driver: bridge

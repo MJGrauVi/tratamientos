@@ -2,9 +2,14 @@
 
 include_once "vendor/autoload.php";
 
+
+
 use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Phroute\Phroute\RouteCollector;
+use App\Controller\MedicamentoController;
 
+
+session_start();
 
 $router = new RouteCollector();
 
@@ -12,6 +17,29 @@ $router = new RouteCollector();
 $router->get('/',function (){
     include_once "app/View/principal.php";
 });
+
+$router->get('/medicamento/{id}', [MedicamentoController::class, 'show']);
+/*var_dump(class_exists('App\\Controller\\MedicamentoController'));
+die;*/
+
+
+//Pruebas del código:
+use App\Class\Medicamento;
+use App\Class\Tratamiento;
+
+$medicamento1 = new Medicamento('IbuDolor', 'ibuprofeno', 5.20);
+$medicamento2 = new Medicamento('paraDolor', 'paracetamol', 4.20);
+$nuevoTratamiento= new Tratamiento('tt02', 'dolor',3);
+$nuevoTratamiento->addMedicamento($medicamento1);
+$nuevoTratamiento->addMedicamento($medicamento2);
+echo "Coste del tratamiento: ";
+$costeMedicamentos = $nuevoTratamiento->calcularCosteMedio();
+echo "Coste medicamentos: " . $costeMedicamentos . "\t";
+echo "*************************";
+$dias= $nuevoTratamiento->getDuracionDias();
+echo "Días de tratamiento: " . $dias;
+$costeMedioPorDia = $costeMedicamentos * ($nuevoTratamiento->getDuracionDias());
+echo "Coste medio por dia: ". $costeMedioPorDia;
 
 
 //Resolución de rutas
